@@ -25,6 +25,7 @@ const corsOptions = {
   origin: [
     // `${process.env.ALLOWED_CORS_ORIGIN_LOCALHOST}`,
     `http://localhost:3000`,
+    `https://tku.gu.zhshihpoan.com`,
   ],
   // origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",

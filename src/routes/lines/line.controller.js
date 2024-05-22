@@ -138,7 +138,7 @@ function handleFollowEvent(event) {
   const lineId = event.source.userId;
   // 在這裡執行用戶初次加入時的處理
   // 例如，發送歡迎訊息或提示訊息
-  const url = `http://localhost:3000/bindLineId/${lineId}`;
+  const url = `${baseURL}/bindLineId/${lineId}`;
   return replyTextMessage(
     event.replyToken,
     `歡迎加入我們請進入官方網站，綁定ID：\n${url}`
