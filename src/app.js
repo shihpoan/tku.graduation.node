@@ -1,3 +1,4 @@
+"use strict";
 const express = require("express");
 const path = require("path");
 const helmet = require("helmet");
@@ -9,12 +10,17 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 // api Router
 const api = require("./routes/api");
-
+const lineRouter = require("./routes/line");
 require("dotenv").config();
 
+// create Express app
+// about Express itself: https://expressjs.com/
 const app = express();
-app.use(helmet());
 
+// line sdk 必須在 body parser 前
+app.use("/line", lineRouter);
+
+app.use(helmet());
 const corsOptions = {
   origin: [
     // `${process.env.ALLOWED_CORS_ORIGIN_LOCALHOST}`,
@@ -30,6 +36,7 @@ app.use(cors(corsOptions));
 app.use(logger("dev"));
 app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
+
 app.use(bodyParser.json({ limit: "50mb" }));
 // parse application/x-www-form-urlencoded, basically can only parse incoming Request Object if strings or arrays
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
@@ -37,11 +44,6 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 // app.use(cookieParser());
 app.use(express.static(path.resolve(__dirname, "public")));
-
 app.use("/api", api);
-//測試用，之後移除
-app.get("/", (req, res) => {
-  res.status(200).send("Everything is very good!");
-});
 
 module.exports = app;
