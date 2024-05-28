@@ -29,6 +29,7 @@ async function httpCreateBlessing(req, res) {
     const data = req.body;
     const datas = await createBlessing(data);
     res.status(200).json({ data: datas });
+    req.app.io.emit("dataUpdated", datas);
   } catch (error) {
     console.error("發生錯誤:", error);
     res.status(500).json({ error: "???" });

@@ -21,6 +21,7 @@ async function findBlessingByReceiverId(id) {
         path: "sender",
         select: ["name"],
       })
+
       .populate({
         path: "category",
         select: ["name", "description", "imageUrl"],
@@ -43,7 +44,23 @@ async function createBlessing(data) {
     });
 
     const savedBlessing = await newBlessing.save();
-    return savedBlessing;
+
+    // 查詢並 populate sender 和 category 字段
+    const populatedBlessing = await Blessing.findById(savedBlessing._id)
+      .populate({
+        path: "sender",
+        select: "name",
+      })
+      .populate({
+        path: "receiver",
+        select: ["name"],
+      })
+      .populate({
+        path: "category",
+        select: ["name", "description", "imageUrl"],
+      });
+
+    return populatedBlessing;
   } catch (err) {
     err.name += "-createUser";
     throw err;

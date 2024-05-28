@@ -82,22 +82,22 @@ async function handleMessageEvent(event) {
           {
             imageUrl:
               "https://sbirdatas.s3.ap-northeast-1.amazonaws.com/%E9%85%87%E4%BE%AF%E8%B3%87%E8%A8%8A/%E6%B3%A1%E6%B3%A1-02.png",
-            action: { type: "message", label: "祝福1", text: "祝福1" },
+            action: { type: "message", label: "心想事成", text: "心想事成" },
           },
           {
             imageUrl:
               "https://sbirdatas.s3.ap-northeast-1.amazonaws.com/%E9%85%87%E4%BE%AF%E8%B3%87%E8%A8%8A/%E6%96%B9%E6%A0%BC%E6%B5%81%E6%98%9F-02.png",
-            action: { type: "message", label: "祝福2", text: "祝福2" },
+            action: { type: "message", label: "一路順風", text: "一路順風" },
           },
           {
             imageUrl:
               "https://sbirdatas.s3.ap-northeast-1.amazonaws.com/%E9%85%87%E4%BE%AF%E8%B3%87%E8%A8%8A/%E6%96%B9%E6%A0%BC%E6%B5%81%E6%98%9F-03.png",
-            action: { type: "message", label: "祝福3", text: "祝福3" },
+            action: { type: "message", label: "左右逢源", text: "左右逢源" },
           },
           {
             imageUrl:
               "https://sbirdatas.s3.ap-northeast-1.amazonaws.com/%E9%85%87%E4%BE%AF%E8%B3%87%E8%A8%8A/%E6%B3%A1%E6%B3%A1-02.png",
-            action: { type: "message", label: "祝福4", text: "祝福4" },
+            action: { type: "message", label: "展翅飛翔", text: "展翅飛翔" },
           },
           // Add more columns if needed
         ],
@@ -112,7 +112,7 @@ async function handleMessageEvent(event) {
   }
 
   // 祝福 Array
-  const array = ["祝福1", "祝福2", "祝福3", "祝福4", "祝福5"];
+  const array = ["心想事成", "一路順風", "左右逢源", "展翅飛翔"];
   console.log("0", event.message.text, array.includes(event.message.text));
 
   // 判斷用戶輸入的訊息是否在指定的陣列中
@@ -123,7 +123,8 @@ async function handleMessageEvent(event) {
     );
     const url = `${baseURL}/blessings/${lineId}/${blessingCategory}`;
 
-    return replyTextMessage(event.replyToken, `傳送祝福：\n${url}`);
+    // 這裡改成 回傳 template button
+    return replyFlexMessage(event.replyToken, `${url}`);
   }
 
   const echo = { type: "text", text: event.message.text };
@@ -152,6 +153,83 @@ function replyTextMessage(replyToken, text) {
     text: text,
   };
   return client.replyMessage({ replyToken: replyToken, messages: [message] });
+}
+
+// 回覆 Template Button
+function replyTemplateButton(replyToken, url) {
+  const templateMessage = {
+    type: "template",
+    altText: "傳送祝福",
+    template: {
+      type: "buttons",
+      thumbnailImageUrl: "https://example.com/thumbnail.jpg",
+      title: "傳送祝福",
+      text: "請點擊下方按鈕",
+      actions: [
+        {
+          type: "uri",
+          label: "傳送祝福",
+          uri: url,
+        },
+      ],
+    },
+  };
+
+  return client.replyMessage({
+    replyToken: replyToken,
+    messages: [templateMessage],
+  });
+}
+
+function replyFlexMessage(replyToken, url) {
+  const flexMessage = {
+    type: "flex",
+    altText: "傳送祝福",
+    contents: {
+      type: "bubble",
+      hero: {
+        type: "image",
+        url: "https://sbirdatas.s3.ap-northeast-1.amazonaws.com/%E9%85%87%E4%BE%AF%E8%B3%87%E8%A8%8A/%E6%96%B9%E6%A0%BC%E6%B5%81%E6%98%9F-02.png", // 可選圖片 URL
+        size: "full",
+        aspectRatio: "20:13",
+        aspectMode: "cover",
+      },
+      body: {
+        type: "box",
+        layout: "vertical",
+        contents: [
+          {
+            type: "text",
+            text: "請點擊下方按鈕",
+            wrap: true,
+            weight: "bold",
+            size: "md",
+          },
+        ],
+      },
+      footer: {
+        type: "box",
+        layout: "vertical",
+        spacing: "sm",
+        contents: [
+          {
+            type: "button",
+            style: "primary",
+            action: {
+              type: "uri",
+              label: "傳送祝福",
+              uri: url,
+            },
+          },
+        ],
+      },
+    },
+  };
+
+  return client.replyMessage({
+    replyToken: replyToken,
+    messages: [flexMessage],
+  });
 }
 
 // 回覆圖片訊息
