@@ -15,7 +15,7 @@ const server = http.createServer(app);
 
 const socketServer = io(server, {
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://tku.gu.zhshihpoan.com"],
     methods: ["GET", "POST", "PATCH", "DELETE"],
   },
 });
