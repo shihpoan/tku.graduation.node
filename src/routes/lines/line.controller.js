@@ -31,35 +31,6 @@ function handleEvent(event) {
   }
 }
 
-// event handler
-// async function handleMessageEvent(event) {
-//   if (event.type !== "message") {
-//     // ignore non-text-message event
-//     return Promise.resolve(null);
-//   }
-
-//   // 獲取用戶的 Line ID
-//   const lineId = event.source.userId;
-
-//   // create an echoing text message
-//   const echo = { type: "text", text: event.message.text };
-
-//   const test = await findUser();
-//   console.log("test", test);
-
-//   // 返回的文字
-//   const replyMessage = `http://localhost:3000/bindLineId/${lineId}`;
-
-//   // 根據用戶的輸入訊息處理
-//   switch (event.message.type) {
-//     case "text":
-//       return replyTextMessage(event.replyToken, replyMessage);
-//     case "image":
-//       return replyImageMessage(event.replyToken);
-//     default:
-//       return replyTextMessage(event.replyToken, "我不明白你說的是什麼。");
-//   }
-// }
 async function handleMessageEvent(event) {
   // 判斷是否為文字訊息
   if (event.message.type !== "text") {
@@ -109,6 +80,14 @@ async function handleMessageEvent(event) {
       replyToken: event.replyToken,
       messages: [carouselTemplate],
     });
+  }
+
+  // 判斷用戶輸入的訊息是否為「送祝福」
+  if (event.message.text === "接收祝福") {
+    const _message = `https://tku.gu.zhshihpoan.com/myBlessings/${lineId}`;
+
+    // 使用 reply API 返回選單給用戶
+    return replyTextMessage(event.replyToken, _message);
   }
 
   // 祝福 Array
