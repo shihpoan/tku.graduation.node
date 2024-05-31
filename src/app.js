@@ -1,5 +1,7 @@
 "use strict";
 const express = require("express");
+const xlsx = require("xlsx");
+
 const path = require("path");
 const helmet = require("helmet");
 
@@ -46,5 +48,69 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 // app.use(cookieParser());
 app.use(express.static(path.resolve(__dirname, "public")));
 app.use("/api", api);
+
+// GET API，每次返回 500 条记录
+app.get("/data/:chunk", (req, res) => {
+  const chunk = parseInt(req.params.chunk, 10);
+  if (isNaN(chunk) || chunk < 1) {
+    return res.status(400).send("Invalid chunk number");
+  }
+
+  const start = (chunk - 1) * chunkSize;
+  const end = start + chunkSize;
+
+  if (start >= data.length) {
+    return res.status(404).send("Chunk not found");
+  }
+
+  const chunkData = data.slice(start, end);
+  res.json(chunkData);
+});
+
+// 函數：讀取 Excel 文件並處理數據
+function processExcelFile(filePath) {
+  const workbook = xlsx.readFile(filePath);
+  const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+  const data = xlsx.utils.sheet_to_json(worksheet);
+
+  const processedData = data.map((row) => {
+    const classInfo = row["班級"];
+    const id = row["學號"];
+    const name = row["姓名"];
+    return { class: classInfo, id: id, name: name };
+  });
+
+  return processedData;
+}
+
+// 函數：比對輸入文字和姓名
+function matchName(input, name) {
+  let matchCount = 0;
+  for (const char of input) {
+    if (name.includes(char)) {
+      matchCount++;
+    }
+  }
+  return matchCount >= 2;
+}
+
+// GET API
+app.get("/check-name/:name", (req, res) => {
+  const input = req.params.name;
+  if (!input) {
+    return res.status(400).send("請提供輸入文字");
+  }
+
+  // 處理 Excel 文件
+  const filePath =
+    "/Users/shihpoan/Desktop/專案/淡江畢業典禮2024/tku.graduation.node/students.xlsx"; // 替換成實際的文件路徑
+  const data = processExcelFile(filePath);
+
+  const result = data.some((item) => matchName(input, item.name));
+  // cons;
+
+  res.send(result ? "true" : "false");
+});
 
 module.exports = app;
