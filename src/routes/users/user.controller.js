@@ -38,6 +38,45 @@ async function httpCreateUser(req, res) {
     }
 
     const jsonData = [
+      { name: "葛煥昭" },
+      { name: "賴金燕" },
+      { name: "周玟妦" },
+      { name: "許輝煌" },
+      { name: "林冠帆" },
+      { name: "鄭琳芝" },
+      { name: "林俊宏" },
+      { name: "吳翎" },
+      { name: "辛淑儀" },
+      { name: "陳小雀" },
+      { name: "廖顏馥婷" },
+      { name: "溫漢雄" },
+      { name: "紀慧君" },
+      { name: "王鵬程" },
+      { name: "張雅晴" },
+      { name: "施增廉" },
+      { name: "陳聖達" },
+      { name: "王郡鴻" },
+      { name: "李宗翰" },
+      { name: "沈大鈞" },
+      { name: "李健蘭" },
+      { name: "楊立人" },
+      { name: "陳祥吉" },
+      { name: "吳萬寶" },
+      { name: "黃世杰" },
+      { name: "包正豪" },
+      { name: "蔣世倫" },
+      { name: "陳國華" },
+      { name: "莊博鈞" },
+      { name: "李宗翰" },
+      { name: "魏瑞辰" },
+      { name: "武士戎" },
+      { name: "徐至杰" },
+      { name: "夏紹俊" },
+      { name: "蔣德馨" },
+      { name: "張惠翔" },
+      { name: "高喜兒" },
+      { name: "廖怡婷" },
+      { name: "劉家勇" },
       {
         class: "資圖三數碩專",
         id: 708060016,
@@ -36023,10 +36062,10 @@ async function httpCreateUser(req, res) {
     const result = jsonData.some((item) => matchName(name, item.name));
     // console.log("result", excelData);
 
-    if (!result) throw new Error("姓名比對錯誤");
+    if (!result) throw new Error("姓名比對錯誤，請輸入正確全名。");
 
     const datas = await createUser(data);
-    res.status(200).json({ data: "datas" });
+    res.status(200).json({ data: datas });
   } catch (error) {
     console.error("發生錯誤:", error);
     res.status(500).json({ error: error.message });
