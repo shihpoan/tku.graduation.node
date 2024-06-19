@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const DB_URL = process.env.DB_URL;
 const LOCAL_DB_URL = process.env.LOCAL_DB_URL;
+const DOCKER_DB_URL = process.env.MONGO_URI;
 const DB_NAME = process.env.DB_NAME;
 
 mongoose.set("strictQuery", false);
@@ -16,7 +17,8 @@ mongoose.connection.on("error", (err) => {
 });
 
 async function mongoConnect() {
-  await mongoose.connect(`${LOCAL_DB_URL}/tku`, {
+  // await mongoose.connect(`${LOCAL_DB_URL}/tku`, {
+  await mongoose.connect(`${DOCKER_DB_URL}`, {
     // useNewUrlParser: true,
     // useUnifiedTopology: true,
     authSource: "admin",

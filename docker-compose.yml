@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  app:
+    image: test/tku-gu-node:latest # 將這裡替換為你的應用程式 image
+    ports:
+      - "3001:3001" # 替換為你的應用程式需要的端口
+    environment:
+      MONGO_URI: mongodb://mongo:27017/tku # 確保你的應用程式能夠讀取此環境變數
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
